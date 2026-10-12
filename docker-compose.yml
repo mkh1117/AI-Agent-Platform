@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-agentops}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_postgres_password}
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -32,8 +32,8 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-agentops}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-dev_rabbitmq_password}
     ports:
-      - "127.0.0.1:5672:5672"
-      - "127.0.0.1:15672:15672"
+      - "127.0.0.1:5673:5672"
+      - "127.0.0.1:15673:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
