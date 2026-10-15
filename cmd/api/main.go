@@ -16,6 +16,7 @@ import (
 	"github.com/mkh1117/agentops/internal/config"
 	"github.com/mkh1117/agentops/internal/platform/database"
 	"github.com/mkh1117/agentops/internal/platform/httpserver"
+	"github.com/mkh1117/agentops/internal/platform/messaging/rabbitmq"
 )
 
 func main() {
@@ -50,6 +51,20 @@ func main() {
 			logger.Error("failed to close postgres", "error", err)
 		}
 	}()
+
+	mq, err := rabbitmq.New(cfg.RabbitMQ)
+	if err != nil {
+		logger.Error("failed to connect to RabbitMQ", "error", err)
+		os.Exit(1)
+	}
+
+	defer func() {
+		if err := mq.Close(); err != nil {
+			logger.Error("failed to close RabbitMQ", "error", err)
+		}
+	}()
+
+	logger.Info("RabbitMQ connected")
 
 	api, err := httpserver.New(cfg.HTTP.Addr, db, logger)
 	if err != nil {
@@ -112,3 +127,4 @@ func main() {
 
 	logger.Info("API server stopped")
 }
+

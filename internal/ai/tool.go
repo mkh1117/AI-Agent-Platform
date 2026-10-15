@@ -1,6 +1,7 @@
 package ai
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"strings"
@@ -8,7 +9,12 @@ import (
 
 type Tool interface{
 	Name()string
-	Execute(t ToolCall)(r ToolResult,e error)
+	Description() string
+	Parameters() json.RawMessage
+	Execute(
+		ctx context.Context,
+		arguments json.RawMessage,
+	) (string, error)
 }
 
 
@@ -20,8 +26,9 @@ type ToolCall struct{
 
 type ToolResult struct{
 	ToolCallID string `json:"tool_call_id"`
-	Content string `json:"content"`
-	Error string `json:"error"`
+	Name       string `json:"name"`
+	Content    string `json:"content"`
+	Error      string `json:"error,omitempty"`
 }
 
 func (call ToolCall)Validate()error{

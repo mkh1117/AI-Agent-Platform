@@ -2,11 +2,10 @@ module github.com/mkh1117/agentops
 
 go 1.27.1
 
-require github.com/stretchr/testify v1.11.1
-
 require (
 	github.com/gin-gonic/gin v1.12.0
 	github.com/joho/godotenv v1.5.1
+	github.com/stretchr/testify v1.11.1
 	gorm.io/driver/postgres v1.6.3
 	gorm.io/gorm v1.31.2
 )
@@ -53,6 +52,4 @@ require (
 	golang.org/x/text v0.34.0 // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gorm.io/driver/postgres v1.6.3 // indirect
-	gorm.io/gorm v1.31.2 // indirect
 )

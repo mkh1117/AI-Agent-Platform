@@ -16,6 +16,8 @@ type Config struct {
 	HTTP HTTPConfig
 
 	DB DatabaseConfig
+
+	RabbitMQ RabbitMQConfig
 }
 
 type HTTPConfig struct {
@@ -31,6 +33,14 @@ type DatabaseConfig struct {
 	MaxOpenConns    int
 	MaxIdleConns    int
 	ConnMaxLifetime time.Duration
+}
+
+type RabbitMQConfig struct {
+    Host     string
+    Port     int
+    User     string
+    Password string
+    VHost    string
 }
 
 func Load() (Config, error) {
@@ -100,6 +110,32 @@ func Load() (Config, error) {
 			"DB_CONN_MAX_LIFETIME must be a positive duration, e.g. 5m",
 		)
 	}
+
+	
+	cfg.RabbitMQ.Host = getEnv("RABBITMQ_HOST", "localhost")
+	cfg.RabbitMQ.User = os.Getenv("RABBITMQ_USER")
+	cfg.RabbitMQ.Password = os.Getenv("RABBITMQ_PASSWORD")
+	cfg.RabbitMQ.VHost = getEnv("RABBITMQ_VHOST", "/")
+
+	if cfg.RabbitMQ.User == "" {
+		return Config{}, errors.New("RABBITMQ_USER is required")
+	}
+
+	if cfg.RabbitMQ.Password == "" {
+		return Config{}, errors.New("RABBITMQ_PASSWORD is required")
+	}
+
+	cfg.RabbitMQ.Port, err = getInt("RABBITMQ_PORT", 5672)
+	if err != nil {
+		return Config{}, err
+	}
+
+	if cfg.RabbitMQ.Port < 1 || cfg.RabbitMQ.Port > 65535 {
+		return Config{}, errors.New(
+			"RABBITMQ_PORT must be between 1 and 65535",
+		)
+	}
+
 
 	return cfg, nil
 
